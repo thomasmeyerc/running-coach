@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { PlanCalendar } from "@/components/plan/plan-calendar";
-import type { TrainingPlan, PlannedSession } from "@/types/database";
-import { Calendar, Target } from "lucide-react";
+import type { TrainingPlan, PlannedSession, Goal } from "@/types/database";
+import { GeneratePlanButton } from "@/components/plan/generate-plan-button";
+import { Calendar, Target, Sparkles } from "lucide-react";
 
 interface PlanWithSessions extends TrainingPlan {
   planned_sessions: PlannedSession[];
@@ -32,6 +33,18 @@ export default async function PlanPage() {
 
   const typedPlan = plan as PlanWithSessions | null;
 
+  // If no plan, check if user has goals
+  let goals: Goal[] = [];
+  if (!typedPlan) {
+    const { data: goalsData } = await supabase
+      .from("goals")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .order("priority", { ascending: true });
+    goals = (goalsData as Goal[]) ?? [];
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -44,11 +57,39 @@ export default async function PlanPage() {
       </div>
 
       {!typedPlan ? (
-        <EmptyPlanState />
+        goals.length > 0 ? (
+          <GeneratePlanState goals={goals} />
+        ) : (
+          <EmptyPlanState />
+        )
       ) : (
         <PlanView plan={typedPlan} />
       )}
     </div>
+  );
+}
+
+function GeneratePlanState({ goals }: { goals: Goal[] }) {
+  const primaryGoal = goals.find((g) => g.priority === "primary") ?? goals[0];
+  const goalLabel =
+    primaryGoal.race_type
+      ? `${primaryGoal.race_type}${primaryGoal.race_date ? ` on ${new Date(primaryGoal.race_date).toLocaleDateString()}` : ""}`
+      : primaryGoal.goal_name;
+
+  return (
+    <Card>
+      <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+        <Sparkles className="mb-4 h-12 w-12 text-primary/60" />
+        <h2 className="text-lg font-semibold">Ready to Generate Your Plan</h2>
+        <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+          You have a goal set: <span className="font-medium text-foreground">{goalLabel}</span>.
+          Generate a personalized training plan powered by AI.
+        </p>
+        <div className="mt-6">
+          <GeneratePlanButton goalId={primaryGoal.id} />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
