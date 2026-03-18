@@ -1,23 +1,34 @@
 export const dynamic = "force-dynamic";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { ProfileForm } from "@/components/profile/profile-form";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select(
+      "id, email, display_name, height_cm, weight_kg, date_of_birth, gender, experience_level, years_running, preferred_units, max_days_per_week, time_preference, injuries_history, preferred_run_days, strava_athlete_id, onboarding_completed, onboarding_step, created_at, updated_at"
+    )
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) redirect("/onboarding");
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground">Your personal information and running background.</p>
+        <p className="text-muted-foreground">
+          Your personal information and running background.
+        </p>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Personal Info</CardTitle>
-          <CardDescription>Update your profile details.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">Profile editing will be available here.</p>
-        </CardContent>
-      </Card>
+      <ProfileForm profile={profile} />
     </div>
   );
 }

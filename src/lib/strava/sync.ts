@@ -28,16 +28,19 @@ export async function syncStravaActivities(userId: string): Promise<SyncResult> 
     .limit(1)
     .single();
 
+  // If we have synced activities before, only fetch newer ones.
+  // Otherwise fetch ALL history (epoch 0 = everything).
   const after = latestActivity
     ? Math.floor(new Date(latestActivity.start_date).getTime() / 1000)
-    : Math.floor((Date.now() - 90 * 24 * 60 * 60 * 1000) / 1000); // 90 days ago
+    : 0;
 
-  // Fetch activities from Strava (paginated)
+  // Fetch activities from Strava (paginated, max 200 per page)
   let page = 1;
   let hasMore = true;
+  const perPage = 200; // Strava maximum
 
   while (hasMore) {
-    const url = `https://www.strava.com/api/v3/athlete/activities?after=${after}&per_page=50&page=${page}`;
+    const url = `https://www.strava.com/api/v3/athlete/activities?after=${after}&per_page=${perPage}&page=${page}`;
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -82,7 +85,7 @@ export async function syncStravaActivities(userId: string): Promise<SyncResult> 
       }
     }
 
-    if (activities.length < 50) {
+    if (activities.length < perPage) {
       hasMore = false;
     }
     page++;

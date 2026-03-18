@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { buildPlanGenerationPrompt } from "@/lib/claude/prompts";
+import type { PlanActivitySummary, PlanWeeklyTrend } from "@/lib/claude/prompts";
 import { generateStructuredResponse } from "@/lib/claude/streaming";
 import { PLAN_MAX_TOKENS } from "@/lib/claude/client";
 import type { GeneratedPlan, GeneratedSession } from "@/types/training";
@@ -97,6 +98,71 @@ export async function POST(request: NextRequest) {
     })),
   ];
 
+  // Fetch recent activities (last 30) for context
+  const { data: activities } = await supabase
+    .from("activities")
+    .select("start_date, activity_type, name, distance_meters, moving_time_seconds, average_pace_seconds_per_km, average_heartrate")
+    .eq("user_id", user.id)
+    .order("start_date", { ascending: false })
+    .limit(30);
+
+  const recentActivities: PlanActivitySummary[] = (activities ?? []).map((a) => ({
+    start_date: a.start_date,
+    activity_type: a.activity_type,
+    name: a.name,
+    distance_meters: a.distance_meters,
+    moving_time_seconds: a.moving_time_seconds,
+    average_pace_seconds_per_km: a.average_pace_seconds_per_km,
+    average_heartrate: a.average_heartrate,
+  }));
+
+  // Build weekly trends from all activities in the last 12 weeks
+  const twelveWeeksAgo = new Date(Date.now() - 84 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: trendActivities } = await supabase
+    .from("activities")
+    .select("start_date, distance_meters, average_pace_seconds_per_km, average_heartrate")
+    .eq("user_id", user.id)
+    .gte("start_date", twelveWeeksAgo)
+    .order("start_date", { ascending: true });
+
+  const weeklyTrends: PlanWeeklyTrend[] = [];
+  if (trendActivities?.length) {
+    const weeks: Record<string, typeof trendActivities> = {};
+    for (const a of trendActivities) {
+      const date = new Date(a.start_date);
+      const monday = new Date(date);
+      monday.setDate(date.getDate() - ((date.getDay() + 6) % 7));
+      const key = monday.toISOString().slice(0, 10);
+      if (!weeks[key]) weeks[key] = [];
+      weeks[key].push(a);
+    }
+    for (const [weekStart, weekActs] of Object.entries(weeks)) {
+      const totalKm = weekActs.reduce((s, a) => s + ((a.distance_meters || 0) / 1000), 0);
+      const paces = weekActs.map(a => a.average_pace_seconds_per_km).filter((v): v is number => v != null);
+      const hrs = weekActs.map(a => a.average_heartrate).filter((v): v is number => v != null);
+      const avgPaceSec = paces.length ? paces.reduce((a, b) => a + b, 0) / paces.length : null;
+      const avgHr = hrs.length ? Math.round(hrs.reduce((a, b) => a + b, 0) / hrs.length) : null;
+      weeklyTrends.push({
+        weekStart,
+        totalKm,
+        sessions: weekActs.length,
+        avgPace: avgPaceSec ? `${Math.floor(avgPaceSec / 60)}:${String(Math.floor(avgPaceSec % 60)).padStart(2, "0")}/km` : "N/A",
+        avgHr: avgHr ? String(avgHr) : "N/A",
+      });
+    }
+  }
+
+  // Calculate age from date_of_birth
+  let age: number | undefined;
+  if (profile.date_of_birth) {
+    const birth = new Date(profile.date_of_birth);
+    const now = new Date();
+    age = now.getFullYear() - birth.getFullYear();
+    if (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())) {
+      age--;
+    }
+  }
+
   const prompt = buildPlanGenerationPrompt(
     allGoals,
     {
@@ -104,8 +170,18 @@ export async function POST(request: NextRequest) {
       weekly_km_current: goal.weekly_km_current ?? undefined,
       max_days_per_week: profile.max_days_per_week,
       preferred_run_days: profile.preferred_run_days ?? undefined,
+      display_name: profile.display_name ?? undefined,
+      age,
+      gender: profile.gender ?? undefined,
+      height_cm: profile.height_cm ? Number(profile.height_cm) : undefined,
+      weight_kg: profile.weight_kg ? Number(profile.weight_kg) : undefined,
+      years_running: profile.years_running ?? undefined,
+      time_preference: profile.time_preference ?? undefined,
+      injuries_history: profile.injuries_history ?? undefined,
     },
-    weeksAvailable
+    weeksAvailable,
+    recentActivities.length > 0 ? recentActivities : undefined,
+    weeklyTrends.length > 0 ? weeklyTrends : undefined
   );
 
   const systemPrompt =

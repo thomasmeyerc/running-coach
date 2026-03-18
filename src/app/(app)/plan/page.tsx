@@ -9,6 +9,7 @@ import Link from "next/link";
 import { PlanCalendar } from "@/components/plan/plan-calendar";
 import type { TrainingPlan, PlannedSession, Goal } from "@/types/database";
 import { GeneratePlanButton } from "@/components/plan/generate-plan-button";
+import { PlanCoach, RegeneratePlanButton } from "@/components/plan/plan-coach";
 import { Calendar, Target, Sparkles } from "lucide-react";
 
 interface PlanWithSessions extends TrainingPlan {
@@ -63,7 +64,7 @@ export default async function PlanPage() {
           <EmptyPlanState />
         )
       ) : (
-        <PlanView plan={typedPlan} />
+        <PlanView plan={typedPlan} goalId={typedPlan.goal_id} />
       )}
     </div>
   );
@@ -116,7 +117,7 @@ function EmptyPlanState() {
   );
 }
 
-function PlanView({ plan }: { plan: PlanWithSessions }) {
+function PlanView({ plan, goalId }: { plan: PlanWithSessions; goalId: string }) {
   const sessions = plan.planned_sessions ?? [];
   const completedCount = sessions.filter(
     (s) => s.is_completed && s.session_type !== "rest"
@@ -148,6 +149,9 @@ function PlanView({ plan }: { plan: PlanWithSessions }) {
               </Badge>
             </div>
           </div>
+          <div className="flex items-center gap-2 pt-2">
+            <RegeneratePlanButton goalId={goalId} />
+          </div>
         </CardHeader>
       </Card>
 
@@ -157,6 +161,9 @@ function PlanView({ plan }: { plan: PlanWithSessions }) {
         currentWeek={plan.current_week}
         totalWeeks={plan.total_weeks}
       />
+
+      {/* Plan Coach */}
+      <PlanCoach />
     </div>
   );
 }

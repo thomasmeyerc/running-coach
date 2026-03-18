@@ -182,19 +182,96 @@ export function buildRunAnalysisPrompt(
   return prompt;
 }
 
+export interface PlanProfileContext {
+  experience_level: string;
+  weekly_km_current?: number;
+  max_days_per_week: number;
+  preferred_run_days?: number[];
+  display_name?: string;
+  age?: number;
+  gender?: string;
+  height_cm?: number;
+  weight_kg?: number;
+  years_running?: number;
+  time_preference?: string;
+  injuries_history?: { type: string; date: string; notes: string; resolved: boolean }[];
+}
+
+export interface PlanActivitySummary {
+  start_date: string;
+  activity_type: string;
+  name: string;
+  distance_meters: number | null;
+  moving_time_seconds: number;
+  average_pace_seconds_per_km: number | null;
+  average_heartrate: number | null;
+}
+
+export interface PlanWeeklyTrend {
+  weekStart: string;
+  totalKm: number;
+  sessions: number;
+  avgPace: string;
+  avgHr: string;
+}
+
 export function buildPlanGenerationPrompt(
   goals: { goal_name: string; goal_type: string; race_type?: string; race_date?: string; target_finish_time_seconds?: number; activity_type?: string; frequency_per_week?: number }[],
-  profile: { experience_level: string; weekly_km_current?: number; max_days_per_week: number; preferred_run_days?: number[] },
-  weeksAvailable: number
+  profile: PlanProfileContext,
+  weeksAvailable: number,
+  recentActivities?: PlanActivitySummary[],
+  weeklyTrends?: PlanWeeklyTrend[]
 ): string {
-  let prompt = `Generate a training plan based on the following:\n\n`;
+  let prompt = `Generate a personalized training plan based on the following comprehensive athlete data:\n\n`;
 
   prompt += `## Athlete Profile\n`;
+  if (profile.display_name) prompt += `- Name: ${profile.display_name}\n`;
   prompt += `- Experience: ${profile.experience_level}\n`;
+  if (profile.age) prompt += `- Age: ${profile.age}\n`;
+  if (profile.gender && profile.gender !== "prefer_not_to_say") prompt += `- Gender: ${profile.gender.replace("_", "-")}\n`;
+  if (profile.height_cm) prompt += `- Height: ${profile.height_cm} cm\n`;
+  if (profile.weight_kg) prompt += `- Weight: ${profile.weight_kg} kg\n`;
+  if (profile.years_running) prompt += `- Years running: ${profile.years_running}\n`;
   prompt += `- Current weekly volume: ${profile.weekly_km_current || "unknown"} km\n`;
   prompt += `- Available training days: ${profile.max_days_per_week}/week\n`;
   if (profile.preferred_run_days?.length) {
-    prompt += `- Preferred days: ${profile.preferred_run_days.join(", ")}\n`;
+    const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    prompt += `- Preferred days: ${profile.preferred_run_days.map(d => dayNames[d] || d).join(", ")}\n`;
+  }
+  if (profile.time_preference && profile.time_preference !== "no_preference") {
+    prompt += `- Preferred training time: ${profile.time_preference}\n`;
+  }
+  if (profile.injuries_history?.length) {
+    const activeInjuries = profile.injuries_history.filter(i => !i.resolved);
+    const pastInjuries = profile.injuries_history.filter(i => i.resolved);
+    if (activeInjuries.length) {
+      prompt += `- CURRENT INJURIES (plan must accommodate): ${activeInjuries.map(i => `${i.type}${i.notes ? ` (${i.notes})` : ""}`).join("; ")}\n`;
+    }
+    if (pastInjuries.length) {
+      prompt += `- Injury history (consider for prevention): ${pastInjuries.map(i => `${i.type} (${i.date})`).join("; ")}\n`;
+    }
+  }
+
+  // Recent activity history
+  if (recentActivities?.length) {
+    prompt += `\n## Recent Training History (last ${recentActivities.length} activities)\n`;
+    prompt += `Use this data to set appropriate starting volumes and paces.\n`;
+    for (const a of recentActivities) {
+      const distKm = a.distance_meters ? (a.distance_meters / 1000).toFixed(1) : "N/A";
+      const pace = a.average_pace_seconds_per_km
+        ? `${Math.floor(a.average_pace_seconds_per_km / 60)}:${String(Math.floor(a.average_pace_seconds_per_km % 60)).padStart(2, "0")}/km`
+        : "";
+      prompt += `- ${a.start_date.slice(0, 10)} | ${a.activity_type} | ${a.name} | ${distKm}km ${pace}${a.average_heartrate ? ` | HR:${a.average_heartrate}` : ""}\n`;
+    }
+  }
+
+  // Weekly trends
+  if (weeklyTrends?.length) {
+    prompt += `\n## Weekly Volume Trends (${weeklyTrends.length} weeks)\n`;
+    prompt += `Use these trends to determine safe starting volume and progression rate.\n`;
+    for (const w of weeklyTrends) {
+      prompt += `- Week of ${w.weekStart}: ${w.totalKm.toFixed(1)}km | ${w.sessions} sessions${w.avgPace !== "N/A" ? ` | Avg pace: ${w.avgPace}` : ""}${w.avgHr !== "N/A" ? ` | Avg HR: ${w.avgHr}` : ""}\n`;
+    }
   }
 
   prompt += `\n## Goals\n`;
@@ -215,14 +292,19 @@ export function buildPlanGenerationPrompt(
   prompt += `- Total weeks: ${weeksAvailable}\n`;
   prompt += `- Include periodization: base → build → peak → taper (2-3 weeks taper before race)\n`;
   prompt += `- Progressive overload: max 10% volume increase per week\n`;
+  prompt += `- Week 1 volume MUST match the athlete's current weekly volume from the trends above\n`;
+  prompt += `- Paces MUST be based on the athlete's actual recent paces from the history above\n`;
   prompt += `- Schedule cross-training on non-running days or easy days\n`;
   prompt += `- Include rest days\n`;
+  if (profile.injuries_history?.some(i => !i.resolved)) {
+    prompt += `- IMPORTANT: Accommodate current injuries — avoid aggravating movements, include rehab/prehab work\n`;
+  }
 
   prompt += `\nGenerate the plan as JSON:
 {
   "plan_name": "descriptive name",
   "total_weeks": ${weeksAvailable},
-  "philosophy": "brief description of the training approach",
+  "philosophy": "brief description of the training approach, referencing the athlete's current fitness and how the plan progresses them toward the goal",
   "sessions": [
     {
       "week_number": 1,
