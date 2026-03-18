@@ -145,8 +145,8 @@ export default async function DashboardPage() {
   const todayStr = now.toISOString().slice(0, 10);
   const upcomingSessions = plan?.planned_sessions
     ?.filter(
-      (s: { scheduled_date: string; is_completed: boolean }) =>
-        s.scheduled_date >= todayStr && !s.is_completed
+      (s: { scheduled_date: string; is_completed: boolean; session_type: string }) =>
+        s.scheduled_date >= todayStr && !s.is_completed && s.session_type !== "rest"
     )
     ?.sort(
       (
