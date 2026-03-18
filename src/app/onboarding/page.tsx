@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,10 +33,22 @@ const STEP_TITLES = [
 ];
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(0);
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center py-20 text-muted-foreground">Loading...</div>}>
+      <OnboardingWizard />
+    </Suspense>
+  );
+}
+
+function OnboardingWizard() {
+  const searchParams = useSearchParams();
+  const stravaResult = searchParams.get("strava");
+  const initialStep = stravaResult === "connected" ? 4 : 0;
+
+  const [step, setStep] = useState(initialStep);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   // Profile data
   const [displayName, setDisplayName] = useState("");
@@ -224,22 +236,36 @@ export default function OnboardingPage() {
             <div className="space-y-4 py-4 text-center">
               <Activity className="mx-auto h-12 w-12 text-orange-500" />
               <h2 className="text-lg font-semibold">Connect Strava</h2>
-              <p className="text-sm text-muted-foreground">
-                Connect your Strava account to automatically sync your training history and new activities.
-              </p>
-              <Button
-                variant="outline"
-                className="gap-2"
-                onClick={() => {
-                  window.location.href = "/api/strava/auth?return_to=/onboarding";
-                }}
-              >
-                <Activity className="h-4 w-4 text-orange-500" />
-                Connect Strava
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                You can skip this step and connect Strava later from Settings.
-              </p>
+              {stravaResult === "connected" ? (
+                <>
+                  <div className="inline-flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                    <Check className="h-4 w-4" />
+                    Strava connected successfully!
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Your activities will sync automatically. Click Next to continue.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    Connect your Strava account to automatically sync your training history and new activities.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="gap-2"
+                    onClick={() => {
+                      window.location.href = "/api/strava/auth?return_to=/onboarding";
+                    }}
+                  >
+                    <Activity className="h-4 w-4 text-orange-500" />
+                    Connect Strava
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    You can skip this step and connect Strava later from Settings.
+                  </p>
+                </>
+              )}
             </div>
           )}
 
