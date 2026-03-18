@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import crypto from "crypto";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -17,12 +17,17 @@ export async function GET() {
     return NextResponse.json({ error: "Strava not configured" }, { status: 500 });
   }
 
-  // Encrypt user ID as state for CSRF protection
-  const state = crypto
+  // Check if caller wants to return to a specific page after auth
+  const returnTo = request.nextUrl.searchParams.get("return_to") || "/settings";
+
+  // Encode return_to in state along with CSRF hash
+  const csrfHash = crypto
     .createHash("sha256")
     .update(user.id + (process.env.STRAVA_CLIENT_SECRET || ""))
     .digest("hex")
-    .slice(0, 32);
+    .slice(0, 16);
+
+  const state = `${csrfHash}:${encodeURIComponent(returnTo)}`;
 
   const params = new URLSearchParams({
     client_id: clientId,

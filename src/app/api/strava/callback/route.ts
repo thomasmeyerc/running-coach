@@ -5,10 +5,17 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  const state = searchParams.get("state") || "";
+
+  // Extract return_to from state (format: "csrfHash:encodedReturnTo")
+  const colonIdx = state.indexOf(":");
+  const returnTo = colonIdx >= 0
+    ? decodeURIComponent(state.slice(colonIdx + 1))
+    : "/settings";
 
   if (error || !code) {
     return NextResponse.redirect(
-      new URL("/settings?strava=error", request.url)
+      new URL(`${returnTo}?strava=error`, request.url)
     );
   }
 
@@ -33,7 +40,7 @@ export async function GET(request: NextRequest) {
 
   if (!tokenResponse.ok) {
     return NextResponse.redirect(
-      new URL("/settings?strava=error", request.url)
+      new URL(`${returnTo}?strava=error`, request.url)
     );
   }
 
@@ -49,6 +56,6 @@ export async function GET(request: NextRequest) {
   }).eq("id", user.id);
 
   return NextResponse.redirect(
-    new URL("/settings?strava=connected", request.url)
+    new URL(`${returnTo}?strava=connected`, request.url)
   );
 }

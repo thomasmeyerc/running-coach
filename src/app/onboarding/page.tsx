@@ -227,9 +227,15 @@ export default function OnboardingPage() {
               <p className="text-sm text-muted-foreground">
                 Connect your Strava account to automatically sync your training history and new activities.
               </p>
-              <Button variant="outline" className="gap-2" disabled>
-                <Activity className="h-4 w-4" />
-                Connect Strava (configure in settings later)
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  window.location.href = "/api/strava/auth?return_to=/onboarding";
+                }}
+              >
+                <Activity className="h-4 w-4 text-orange-500" />
+                Connect Strava
               </Button>
               <p className="text-xs text-muted-foreground">
                 You can skip this step and connect Strava later from Settings.
