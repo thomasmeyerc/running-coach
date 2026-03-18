@@ -59,11 +59,11 @@ export function PaceTrendChart({ data }: PaceTrendChartProps) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "hsl(var(--popover))",
-            border: "1px solid hsl(var(--border))",
+            backgroundColor: "var(--popover)",
+            border: "1px solid var(--border)",
             borderRadius: "8px",
             fontSize: "12px",
-            color: "hsl(var(--popover-foreground))",
+            color: "var(--popover-foreground)",
           }}
           formatter={(value) => [
             `${formatPaceLabel(value as number)}/km`,
@@ -73,9 +73,9 @@ export function PaceTrendChart({ data }: PaceTrendChartProps) {
         <Line
           type="monotone"
           dataKey="pace"
-          stroke="hsl(var(--primary))"
+          stroke="var(--primary)"
           strokeWidth={2}
-          dot={{ r: 3, fill: "hsl(var(--primary))" }}
+          dot={{ r: 3, fill: "var(--primary)" }}
           activeDot={{ r: 5 }}
         />
       </LineChart>

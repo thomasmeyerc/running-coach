@@ -19,6 +19,7 @@ import {
   Target,
   User,
 } from "lucide-react";
+import { LogoIcon } from "@/components/ui/logo-icon";
 
 const TOTAL_STEPS = 7;
 
@@ -163,9 +164,7 @@ function OnboardingWizard() {
         <CardContent className="pt-6">
           {step === 0 && (
             <div className="space-y-6 text-center py-8">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
-                <Activity className="h-8 w-8 text-primary-foreground" />
-              </div>
+              <LogoIcon size="lg" className="mx-auto h-16 w-16 rounded-2xl" />
               <div>
                 <h2 className="text-2xl font-bold">Welcome to RunCoach</h2>
                 <p className="mt-2 text-muted-foreground">

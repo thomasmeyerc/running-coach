@@ -43,18 +43,18 @@ export function WeeklyVolumeChart({ data }: WeeklyVolumeChartProps) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "hsl(var(--popover))",
-            border: "1px solid hsl(var(--border))",
+            backgroundColor: "var(--popover)",
+            border: "1px solid var(--border)",
             borderRadius: "8px",
             fontSize: "12px",
-            color: "hsl(var(--popover-foreground))",
+            color: "var(--popover-foreground)",
           }}
           formatter={(value) => [`${value} km`, "Distance"]}
           labelFormatter={(label) => `Week of ${label}`}
         />
         <Bar
           dataKey="km"
-          fill="hsl(var(--primary))"
+          fill="var(--primary)"
           radius={[4, 4, 0, 0]}
           maxBarSize={40}
         />

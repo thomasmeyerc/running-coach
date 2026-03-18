@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Activity, BarChart3, Brain, Calendar, MessageSquare, Target } from "lucide-react";
+import { BarChart3, Brain, Calendar, MessageSquare, Target, Activity } from "lucide-react";
+import { LogoIcon } from "@/components/ui/logo-icon";
 import Link from "next/link";
 
 export default function LandingPage() {
@@ -9,9 +10,7 @@ export default function LandingPage() {
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <Activity className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <LogoIcon size="md" />
             <span className="text-xl font-semibold">RunCoach</span>
           </div>
           <div className="flex items-center gap-3">
@@ -30,7 +29,7 @@ export default function LandingPage() {
         <h1 className="mx-auto max-w-3xl text-5xl font-bold tracking-tight sm:text-6xl">
           Your AI-powered
           <br />
-          <span className="text-primary">running coach</span>
+          <span className="brand-text-gradient">running coach</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
           Personalized training plans, intelligent coaching, and progress tracking.

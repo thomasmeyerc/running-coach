@@ -31,7 +31,7 @@ function Progress({
     >
       <div
         data-slot="progress-indicator"
-        className="h-full bg-primary transition-all duration-300"
+        className="h-full brand-gradient transition-all duration-300"
         style={{ width: `${percentage}%` }}
       />
     </div>

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Activity } from "lucide-react";
+import { LogoIcon } from "@/components/ui/logo-icon";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -57,9 +57,7 @@ export default function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
-            <Activity className="h-6 w-6 text-primary-foreground" />
-          </div>
+          <LogoIcon size="lg" className="mx-auto mb-4" />
           <CardTitle className="text-2xl">Create your account</CardTitle>
           <CardDescription>Start your personalized running journey</CardDescription>
         </CardHeader>
