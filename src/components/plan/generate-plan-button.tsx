@@ -27,7 +27,12 @@ export function GeneratePlanButton({ goalId }: GeneratePlanButtonProps) {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to generate plan");
+        const msg = data.error || "Failed to generate plan";
+        // Make Anthropic API errors user-friendly
+        if (msg.includes("credit balance") || msg.includes("billing")) {
+          throw new Error("AI service credits need to be topped up. Please check your Anthropic API billing.");
+        }
+        throw new Error(msg);
       }
 
       // Refresh the page to show the new plan

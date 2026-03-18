@@ -73,8 +73,11 @@ function OnboardingWizard() {
   const [raceType, setRaceType] = useState("10k");
   const [raceDate, setRaceDate] = useState("");
 
+  const [loadingMessage, setLoadingMessage] = useState("");
+
   async function handleComplete() {
     setLoading(true);
+    setLoadingMessage("Saving your profile...");
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
@@ -95,8 +98,10 @@ function OnboardingWizard() {
     }).eq("id", user.id);
 
     // Create first goal
+    let goalId: string | null = null;
     if (goalName) {
-      await supabase.from("goals").insert({
+      setLoadingMessage("Creating your goal...");
+      const { data: goalData } = await supabase.from("goals").insert({
         user_id: user.id,
         goal_name: goalName,
         goal_type: goalType,
@@ -106,7 +111,27 @@ function OnboardingWizard() {
         weekly_km_current: weeklyKm ? Number(weeklyKm) : null,
         days_available_per_week: Number(maxDaysPerWeek),
         priority: "primary",
-      });
+      }).select("id").single();
+      goalId = goalData?.id ?? null;
+    }
+
+    // Generate training plan from goal
+    if (goalId) {
+      setLoadingMessage("AI is generating your training plan...");
+      try {
+        const res = await fetch("/api/coach/generate-plan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ goal_id: goalId }),
+        });
+        if (!res.ok) {
+          // Plan generation failed — non-critical, user can retry from Plan page
+          console.warn("Plan generation failed during onboarding");
+        }
+      } catch {
+        // Non-critical — continue to dashboard
+        console.warn("Plan generation error during onboarding");
+      }
     }
 
     router.push("/dashboard");
@@ -391,7 +416,7 @@ function OnboardingWizard() {
           </Button>
         ) : (
           <Button onClick={handleComplete} disabled={loading} className="gap-2">
-            {loading ? "Setting up..." : "Start training"} <Check className="h-4 w-4" />
+            {loading ? loadingMessage || "Setting up..." : "Start training"} <Check className="h-4 w-4" />
           </Button>
         )}
       </div>

@@ -223,8 +223,14 @@ export async function POST(request: NextRequest) {
       .single();
 
     return NextResponse.json({ plan: completePlan }, { status: 201 });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+  } catch (error: unknown) {
+    const err = error as { status?: number; message?: string; error?: { message?: string } };
+    // Surface Anthropic billing/auth errors clearly
+    if (err.status === 400 || err.status === 401 || err.status === 403) {
+      const apiMsg = err.error?.message || err.message || "API error";
+      return NextResponse.json({ error: apiMsg }, { status: err.status });
+    }
+    const message = err.message || "Unknown error";
     return NextResponse.json(
       { error: `Plan generation failed: ${message}` },
       { status: 500 }
