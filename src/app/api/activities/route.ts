@@ -91,20 +91,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { distance_meters, moving_time_seconds } = parsed.data;
-
-  // Calculate pace for distance-based activities
-  let average_pace_seconds_per_km: number | null = null;
-  if (distance_meters && distance_meters > 0) {
-    average_pace_seconds_per_km = moving_time_seconds / (distance_meters / 1000);
-  }
-
   const { data: activity, error } = await supabase
     .from("activities")
     .insert({
       user_id: user.id,
       ...parsed.data,
-      average_pace_seconds_per_km,
       source: "manual" as const,
     })
     .select()

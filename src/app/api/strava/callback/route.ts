@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { syncStravaActivities } from "@/lib/strava/sync";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -54,6 +55,11 @@ export async function GET(request: NextRequest) {
     strava_token_expires_at: new Date(tokenData.expires_at * 1000).toISOString(),
     strava_scope: "read,activity:read_all",
   }).eq("id", user.id);
+
+  // Auto-sync activities in the background (don't block redirect)
+  syncStravaActivities(user.id).catch(() => {
+    // Sync failure is non-critical — user can retry from Settings
+  });
 
   return NextResponse.redirect(
     new URL(`${returnTo}?strava=connected`, request.url)
