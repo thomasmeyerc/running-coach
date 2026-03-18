@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   BarChart3,
   Calendar,
+  Globe,
   LogOut,
   MessageSquare,
   Settings,
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/activities", label: "Activities", icon: Activity },
   { href: "/plan", label: "Training Plan", icon: Calendar },
   { href: "/goals", label: "Goals", icon: Target },
+  { href: "/races", label: "Races", icon: Globe },
   { href: "/coach", label: "AI Coach", icon: MessageSquare },
 ];
 

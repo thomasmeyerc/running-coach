@@ -7,6 +7,7 @@ import {
   Activity,
   BarChart3,
   Calendar,
+  Globe,
   MessageSquare,
   Target,
 } from "lucide-react";
@@ -16,7 +17,7 @@ const navItems = [
   { href: "/activities", label: "Activities", icon: Activity },
   { href: "/plan", label: "Plan", icon: Calendar },
   { href: "/goals", label: "Goals", icon: Target },
-  { href: "/coach", label: "Coach", icon: MessageSquare },
+  { href: "/races", label: "Races", icon: Globe },
 ];
 
 export function MobileNav() {

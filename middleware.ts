@@ -63,8 +63,8 @@ export async function middleware(request: NextRequest) {
   // Check onboarding status for app routes
   if (pathname.startsWith("/dashboard") || pathname.startsWith("/activities") ||
       pathname.startsWith("/plan") || pathname.startsWith("/goals") ||
-      pathname.startsWith("/coach") || pathname.startsWith("/profile") ||
-      pathname.startsWith("/settings")) {
+      pathname.startsWith("/races") || pathname.startsWith("/coach") ||
+      pathname.startsWith("/profile") || pathname.startsWith("/settings")) {
     const { data: profile } = await supabase
       .from("user_profiles")
       .select("onboarding_completed")
