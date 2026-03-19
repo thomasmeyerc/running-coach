@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useMemo } from "react";
+import { Suspense, useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -51,30 +51,60 @@ function OnboardingWizard() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
 
+  // Restore saved state from localStorage (survives Strava redirect)
+  const saved = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = localStorage.getItem("onboarding_state");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
   // Profile data
-  const [displayName, setDisplayName] = useState("");
-  const [heightCm, setHeightCm] = useState("");
-  const [weightKg, setWeightKg] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState("");
+  const [displayName, setDisplayName] = useState(saved?.displayName ?? "");
+  const [heightCm, setHeightCm] = useState(saved?.heightCm ?? "");
+  const [weightKg, setWeightKg] = useState(saved?.weightKg ?? "");
+  const [dateOfBirth, setDateOfBirth] = useState(saved?.dateOfBirth ?? "");
+  const [gender, setGender] = useState(saved?.gender ?? "");
 
   // Running background
-  const [experienceLevel, setExperienceLevel] = useState("beginner");
-  const [yearsRunning, setYearsRunning] = useState("");
-  const [weeklyKm, setWeeklyKm] = useState("");
+  const [experienceLevel, setExperienceLevel] = useState(saved?.experienceLevel ?? "beginner");
+  const [yearsRunning, setYearsRunning] = useState(saved?.yearsRunning ?? "");
+  const [weeklyKm, setWeeklyKm] = useState(saved?.weeklyKm ?? "");
 
   // Preferences
-  const [preferredUnits, setPreferredUnits] = useState("km");
-  const [maxDaysPerWeek, setMaxDaysPerWeek] = useState("4");
-  const [timePreference, setTimePreference] = useState("no_preference");
+  const [preferredUnits, setPreferredUnits] = useState(saved?.preferredUnits ?? "km");
+  const [maxDaysPerWeek, setMaxDaysPerWeek] = useState(saved?.maxDaysPerWeek ?? "4");
+  const [timePreference, setTimePreference] = useState(saved?.timePreference ?? "no_preference");
 
   // Goal
-  const [goalType, setGoalType] = useState("race");
-  const [goalName, setGoalName] = useState("");
-  const [raceType, setRaceType] = useState("10k");
-  const [raceDate, setRaceDate] = useState("");
+  const [goalType, setGoalType] = useState(saved?.goalType ?? "race");
+  const [goalName, setGoalName] = useState(saved?.goalName ?? "");
+  const [raceType, setRaceType] = useState(saved?.raceType ?? "10k");
+  const [raceDate, setRaceDate] = useState(saved?.raceDate ?? "");
 
   const [loadingMessage, setLoadingMessage] = useState("");
+
+  // Persist form state to localStorage on every change
+  const saveState = useCallback(() => {
+    try {
+      localStorage.setItem("onboarding_state", JSON.stringify({
+        displayName, heightCm, weightKg, dateOfBirth, gender,
+        experienceLevel, yearsRunning, weeklyKm,
+        preferredUnits, maxDaysPerWeek, timePreference,
+        goalType, goalName, raceType, raceDate,
+      }));
+    } catch { /* quota exceeded — non-critical */ }
+  }, [
+    displayName, heightCm, weightKg, dateOfBirth, gender,
+    experienceLevel, yearsRunning, weeklyKm,
+    preferredUnits, maxDaysPerWeek, timePreference,
+    goalType, goalName, raceType, raceDate,
+  ]);
+
+  useEffect(() => { saveState(); }, [saveState]);
 
   async function handleComplete() {
     setLoading(true);
@@ -135,6 +165,7 @@ function OnboardingWizard() {
       }
     }
 
+    localStorage.removeItem("onboarding_state");
     router.push("/dashboard");
     router.refresh();
   }
