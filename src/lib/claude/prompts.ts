@@ -215,12 +215,21 @@ export interface PlanWeeklyTrend {
   avgHr: string;
 }
 
+export interface PlanWizardPreferences {
+  preferred_long_run_day?: number;
+  intensity_preference?: "conservative" | "moderate" | "aggressive";
+  include_cross_training?: boolean;
+  cross_training_types?: string[];
+  max_session_duration_minutes?: number;
+}
+
 export function buildPlanGenerationPrompt(
   goals: { goal_name: string; goal_type: string; race_type?: string; race_date?: string; target_finish_time_seconds?: number; activity_type?: string; frequency_per_week?: number }[],
   profile: PlanProfileContext,
   weeksAvailable: number,
   recentActivities?: PlanActivitySummary[],
-  weeklyTrends?: PlanWeeklyTrend[]
+  weeklyTrends?: PlanWeeklyTrend[],
+  wizardPrefs?: PlanWizardPreferences
 ): string {
   let prompt = `Generate a personalized training plan based on the following comprehensive athlete data:\n\n`;
 
@@ -294,8 +303,36 @@ export function buildPlanGenerationPrompt(
   prompt += `- Progressive overload: max 10% volume increase per week\n`;
   prompt += `- Week 1 volume MUST match the athlete's current weekly volume from the trends above\n`;
   prompt += `- Paces MUST be based on the athlete's actual recent paces from the history above\n`;
-  prompt += `- Schedule cross-training on non-running days or easy days\n`;
   prompt += `- Include rest days\n`;
+
+  // Wizard preferences
+  if (wizardPrefs) {
+    if (wizardPrefs.preferred_long_run_day !== undefined) {
+      const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      prompt += `- Schedule the long run on ${dayNames[wizardPrefs.preferred_long_run_day]}\n`;
+    }
+    if (wizardPrefs.intensity_preference) {
+      const intensityDesc: Record<string, string> = {
+        conservative: "Conservative approach — slower volume progression, extra recovery days, prioritize injury prevention",
+        moderate: "Balanced approach — steady progression with adequate recovery",
+        aggressive: "Aggressive approach — faster progression, higher intensity, for experienced athletes",
+      };
+      prompt += `- Intensity: ${intensityDesc[wizardPrefs.intensity_preference]}\n`;
+    }
+    if (wizardPrefs.include_cross_training && wizardPrefs.cross_training_types?.length) {
+      prompt += `- Include cross-training: ${wizardPrefs.cross_training_types.join(", ")} on non-running days or easy days\n`;
+    } else if (wizardPrefs.include_cross_training === false) {
+      prompt += `- Do NOT include cross-training sessions — running only with rest days\n`;
+    } else {
+      prompt += `- Schedule cross-training on non-running days or easy days\n`;
+    }
+    if (wizardPrefs.max_session_duration_minutes) {
+      prompt += `- Weekday sessions should not exceed ${wizardPrefs.max_session_duration_minutes} minutes (weekend long runs may exceed this)\n`;
+    }
+  } else {
+    prompt += `- Schedule cross-training on non-running days or easy days\n`;
+  }
+
   if (profile.injuries_history?.some(i => !i.resolved)) {
     prompt += `- IMPORTANT: Accommodate current injuries — avoid aggravating movements, include rehab/prehab work\n`;
   }

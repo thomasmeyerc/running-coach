@@ -9,6 +9,14 @@ import type { GeneratedPlan, GeneratedSession } from "@/types/training";
 
 const generatePlanSchema = z.object({
   goal_id: z.string().uuid(),
+  preferences: z.object({
+    preferred_long_run_day: z.number().int().min(0).max(6).optional(),
+    intensity_preference: z.enum(["conservative", "moderate", "aggressive"]).optional(),
+    include_cross_training: z.boolean().optional(),
+    cross_training_types: z.array(z.string()).optional(),
+    training_days: z.array(z.number().int().min(0).max(6)).optional(),
+    max_session_duration_minutes: z.number().int().min(20).max(300).optional(),
+  }).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -36,7 +44,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { goal_id } = parsed.data;
+  const { goal_id, preferences } = parsed.data;
 
   // Load goal
   const { data: goal, error: goalError } = await supabase
@@ -163,13 +171,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Override profile preferences with wizard preferences if provided
+  const effectiveRunDays = preferences?.training_days ?? profile.preferred_run_days ?? undefined;
+  const effectiveMaxDays = preferences?.training_days?.length ?? profile.max_days_per_week;
+
   const prompt = buildPlanGenerationPrompt(
     allGoals,
     {
       experience_level: profile.experience_level,
       weekly_km_current: goal.weekly_km_current ?? undefined,
-      max_days_per_week: profile.max_days_per_week,
-      preferred_run_days: profile.preferred_run_days ?? undefined,
+      max_days_per_week: effectiveMaxDays,
+      preferred_run_days: effectiveRunDays,
       display_name: profile.display_name ?? undefined,
       age,
       gender: profile.gender ?? undefined,
@@ -181,7 +193,14 @@ export async function POST(request: NextRequest) {
     },
     weeksAvailable,
     recentActivities.length > 0 ? recentActivities : undefined,
-    weeklyTrends.length > 0 ? weeklyTrends : undefined
+    weeklyTrends.length > 0 ? weeklyTrends : undefined,
+    preferences ? {
+      preferred_long_run_day: preferences.preferred_long_run_day,
+      intensity_preference: preferences.intensity_preference,
+      include_cross_training: preferences.include_cross_training,
+      cross_training_types: preferences.cross_training_types,
+      max_session_duration_minutes: preferences.max_session_duration_minutes,
+    } : undefined
   );
 
   const systemPrompt =
