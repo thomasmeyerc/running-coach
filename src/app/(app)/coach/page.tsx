@@ -32,9 +32,9 @@ export default async function CoachPage() {
 
   return (
     <div className="flex h-[calc(100vh-7rem)] flex-col md:h-[calc(100vh-3rem)]">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold tracking-tight">AI Coach</h1>
-        <p className="text-muted-foreground">
+      <div className="page-header mb-4">
+        <h1 className="text-2xl font-bold tracking-tight">AI Coach</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
           Chat with your personal running coach. Ask about training, nutrition,
           recovery, and more.
         </p>

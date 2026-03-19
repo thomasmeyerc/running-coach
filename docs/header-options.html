@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunCoach — Header & Font Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #f5f5f5; color: #1a1a1a; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+  .intro { text-align: center; margin-bottom: 56px; }
+  .intro h1 { font-size: 28px; font-weight: 700; }
+  .intro p { color: #888; margin-top: 8px; font-size: 15px; }
+
+  .option { background: white; border-radius: 20px; border: 1px solid #e5e5e5; padding: 40px; margin-bottom: 40px; position: relative; }
+  .option-label { position: absolute; top: -14px; left: 32px; background: linear-gradient(135deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); color: white; font-size: 13px; font-weight: 600; padding: 4px 16px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  .font-name { font-size: 13px; color: #999; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; font-family: 'Inter', sans-serif !important; }
+
+  /* Fake app frame */
+  .app-frame { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; }
+  .sidebar-strip { width: 220px; background: #fcfcfc; border-right: 1px solid #e5e5e5; padding: 16px; position: absolute; top: 0; left: 0; bottom: 0; }
+  .frame-body { margin-left: 0; padding: 32px; }
+
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; font-size: 13px; color: #777; margin-bottom: 2px; }
+  .nav-item.active { background: oklch(0.95 0.04 340); color: oklch(0.4 0.15 310); font-weight: 500; }
+
+  /* Card mocks */
+  .mock-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 24px; }
+  .mock-card { background: white; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; }
+  .mock-card .card-title { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 8px; }
+  .mock-card .card-value { font-size: 28px; font-weight: 700; }
+  .mock-card .card-sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+  .logo-icon { border-radius: 10px; background: linear-gradient(135deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex-shrink: 0; }
+
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+  .comparison > div { background: white; border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; }
+  .comparison .comp-header { padding: 24px 28px 20px; }
+  .comparison .comp-body { padding: 0 28px 24px; }
+
+  .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 6px; margin-right: 6px; }
+
+  .section-divider { height: 1px; background: #eee; margin: 32px 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <h1>Header & Font Options</h1>
+    <p>Three design directions for page headers, fonts, and overall feel.</p>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- OPTION A: Plus Jakarta Sans — Athletic Modern -->
+  <!-- ============================================= -->
+  <div class="option">
+    <div class="option-label">Option A</div>
+
+    <div class="font-name">Plus Jakarta Sans — Athletic Modern</div>
+
+    <p style="font-family: 'Plus Jakarta Sans'; font-size: 14px; color: #666; margin-bottom: 28px; line-height: 1.6;">
+      A geometric sans-serif with personality. Rounder letterforms feel modern and approachable without being childish. Heavier weights have strong presence. Headers use a gradient accent line and tighter spacing.
+    </p>
+
+    <!-- Dashboard mock -->
+    <div class="app-frame">
+      <div class="frame-body" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+        <!-- Page header style A: gradient underline accent -->
+        <div style="margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 2px;">
+            <span style="font-size: 12px; font-weight: 500; color: oklch(0.5 0.22 310); text-transform: uppercase; letter-spacing: 0.08em;">Overview</span>
+          </div>
+          <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;">Dashboard</h1>
+          <div style="width: 48px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); margin-top: 8px;"></div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="mock-cards">
+          <div class="mock-card" style="font-family: 'Plus Jakarta Sans';">
+            <div class="card-title">Weekly Distance</div>
+            <div class="card-value" style="letter-spacing: -0.02em;">24.3 <span style="font-size: 16px; font-weight: 500; color: #aaa;">km</span></div>
+            <div class="card-sub" style="color: oklch(0.5 0.22 310);">+12% vs last week</div>
+          </div>
+          <div class="mock-card" style="font-family: 'Plus Jakarta Sans';">
+            <div class="card-title">Avg Pace</div>
+            <div class="card-value" style="letter-spacing: -0.02em;">5:42 <span style="font-size: 16px; font-weight: 500; color: #aaa;">/km</span></div>
+            <div class="card-sub">Steady improvement</div>
+          </div>
+          <div class="mock-card" style="font-family: 'Plus Jakarta Sans';">
+            <div class="card-title">Sessions</div>
+            <div class="card-value" style="letter-spacing: -0.02em;">4 <span style="font-size: 16px; font-weight: 500; color: #aaa;">of 5</span></div>
+            <div class="card-sub" style="color: oklch(0.5 0.22 310);">On track</div>
+          </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <!-- Second page example -->
+        <div style="border-top: 1px solid #eee; padding-top: 24px;">
+          <div style="margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 500; color: oklch(0.5 0.22 310); text-transform: uppercase; letter-spacing: 0.08em;">Schedule</span>
+          </div>
+          <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;">Training Plan</h1>
+          <div style="width: 48px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); margin-top: 8px;"></div>
+          <p style="font-size: 14px; color: #888; margin-top: 10px;">CPH Marathon 7-Week Beginner Finish Plan</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 13px; color: #888; font-family: 'Inter';">
+      <strong style="color: #555;">Key traits:</strong> Tight letter-spacing on headings (−0.02em), extra-bold 800 weight, small uppercase category label above the title, gradient underline bar as accent. Body text at regular 400 weight.
+    </div>
+  </div>
+
+
+  <!-- ======================================= -->
+  <!-- OPTION B: DM Sans — Clean & Confident  -->
+  <!-- ======================================= -->
+  <div class="option">
+    <div class="option-label">Option B</div>
+
+    <div class="font-name">DM Sans — Clean & Confident</div>
+
+    <p style="font-family: 'DM Sans'; font-size: 14px; color: #666; margin-bottom: 28px; line-height: 1.6;">
+      A versatile geometric sans with excellent readability at all sizes. Clean, slightly wider letterforms feel professional and calm. Headers use a left-side gradient border and a compact layout.
+    </p>
+
+    <!-- Dashboard mock -->
+    <div class="app-frame">
+      <div class="frame-body" style="font-family: 'DM Sans', sans-serif;">
+        <!-- Page header style B: left gradient border -->
+        <div style="border-left: 3px solid; border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1; padding-left: 16px; margin-bottom: 8px;">
+          <h1 style="font-size: 28px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">Dashboard</h1>
+          <p style="font-size: 14px; color: #888; margin-top: 2px;">Your training at a glance</p>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="mock-cards">
+          <div class="mock-card" style="font-family: 'DM Sans';">
+            <div class="card-title">Weekly Distance</div>
+            <div class="card-value" style="font-weight: 700;">24.3 <span style="font-size: 16px; font-weight: 400; color: #aaa;">km</span></div>
+            <div class="card-sub" style="color: oklch(0.5 0.22 310);">+12% vs last week</div>
+          </div>
+          <div class="mock-card" style="font-family: 'DM Sans';">
+            <div class="card-title">Avg Pace</div>
+            <div class="card-value" style="font-weight: 700;">5:42 <span style="font-size: 16px; font-weight: 400; color: #aaa;">/km</span></div>
+            <div class="card-sub">Steady improvement</div>
+          </div>
+          <div class="mock-card" style="font-family: 'DM Sans';">
+            <div class="card-title">Sessions</div>
+            <div class="card-value" style="font-weight: 700;">4 <span style="font-size: 16px; font-weight: 400; color: #aaa;">of 5</span></div>
+            <div class="card-sub" style="color: oklch(0.5 0.22 310);">On track</div>
+          </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <!-- Second page example -->
+        <div style="border-top: 1px solid #eee; padding-top: 24px;">
+          <div style="border-left: 3px solid; border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1; padding-left: 16px;">
+            <h1 style="font-size: 28px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">Training Plan</h1>
+            <p style="font-size: 14px; color: #888; margin-top: 2px;">CPH Marathon 7-Week Beginner Finish Plan</p>
+          </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <!-- Third page example -->
+        <div style="border-top: 1px solid #eee; padding-top: 24px;">
+          <div style="border-left: 3px solid; border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1; padding-left: 16px;">
+            <h1 style="font-size: 28px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">Activities</h1>
+            <p style="font-size: 14px; color: #888; margin-top: 2px;">Your training history and logged runs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 13px; color: #888; font-family: 'Inter';">
+      <strong style="color: #555;">Key traits:</strong> Compact header with gradient left border, title + subtitle on one block, slightly smaller heading (28px vs 32px), clean 700 weight. Feels professional and minimal.
+    </div>
+  </div>
+
+
+  <!-- ============================================== -->
+  <!-- OPTION C: Outfit — Sporty & Expressive         -->
+  <!-- ============================================== -->
+  <div class="option">
+    <div class="option-label">Option C</div>
+
+    <div class="font-name">Outfit — Sporty & Expressive</div>
+
+    <p style="font-family: 'Outfit'; font-size: 14px; color: #666; margin-bottom: 28px; line-height: 1.6;">
+      A geometric typeface designed for UI with a slight sportiness. Wider characters, open counters, and even stroke widths. Headers use a gradient background banner that adds energy to every page.
+    </p>
+
+    <!-- Dashboard mock -->
+    <div class="app-frame">
+      <div class="frame-body" style="font-family: 'Outfit', sans-serif; padding-top: 0;">
+        <!-- Page header style C: gradient banner -->
+        <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295 / 8%), oklch(0.65 0.2 350 / 6%)); margin: 0 -32px; padding: 28px 32px 24px; border-bottom: 1px solid oklch(0.65 0.2 350 / 15%);">
+          <h1 style="font-size: 30px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1;">Dashboard</h1>
+          <p style="font-size: 14px; color: #888; margin-top: 4px;">Good morning! Here's your training overview.</p>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="mock-cards" style="margin-top: 24px;">
+          <div class="mock-card" style="font-family: 'Outfit';">
+            <div class="card-title" style="font-weight: 500;">Weekly Distance</div>
+            <div class="card-value" style="font-weight: 700; letter-spacing: -0.01em;">24.3 <span style="font-size: 16px; font-weight: 400; color: #aaa;">km</span></div>
+            <div class="card-sub" style="color: oklch(0.5 0.22 310);">+12% vs last week</div>
+          </div>
+          <div class="mock-card" style="font-family: 'Outfit';">
+            <div class="card-title" style="font-weight: 500;">Avg Pace</div>
+            <div class="card-value" style="font-weight: 700; letter-spacing: -0.01em;">5:42 <span style="font-size: 16px; font-weight: 400; color: #aaa;">/km</span></div>
+            <div class="card-sub">Steady improvement</div>
+          </div>
+          <div class="mock-card" style="font-family: 'Outfit';">
+            <div class="card-title" style="font-weight: 500;">Sessions</div>
+            <div class="card-value" style="font-weight: 700; letter-spacing: -0.01em;">4 <span style="font-size: 16px; font-weight: 400; color: #aaa;">of 5</span></div>
+            <div class="card-sub" style="color: oklch(0.5 0.22 310);">On track</div>
+          </div>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <!-- Second page example -->
+        <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295 / 8%), oklch(0.65 0.2 350 / 6%)); margin: 0 -32px; padding: 24px 32px 20px; border-top: 1px solid #eee; border-bottom: 1px solid oklch(0.65 0.2 350 / 15%);">
+          <h1 style="font-size: 30px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1;">Training Plan</h1>
+          <p style="font-size: 14px; color: #888; margin-top: 4px;">CPH Marathon 7-Week Beginner Finish Plan</p>
+        </div>
+
+        <div style="height: 24px;"></div>
+
+        <!-- Third page example -->
+        <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295 / 8%), oklch(0.65 0.2 350 / 6%)); margin: 0 -32px; padding: 24px 32px 20px; border-top: 1px solid #eee; border-bottom: 1px solid oklch(0.65 0.2 350 / 15%);">
+          <h1 style="font-size: 30px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1;">AI Coach</h1>
+          <p style="font-size: 14px; color: #888; margin-top: 4px;">Chat with your personal running coach</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 13px; color: #888; font-family: 'Inter';">
+      <strong style="color: #555;">Key traits:</strong> Subtle gradient tinted banner behind the header, full-width bleed, warm and inviting. The tint is very light (6-8% opacity) so it adds color without overwhelming. Friendly greeting on dashboard.
+    </div>
+  </div>
+
+
+  <!-- ============================================== -->
+  <!-- Side-by-side comparison                        -->
+  <!-- ============================================== -->
+  <div style="margin-top: 48px;">
+    <h2 style="font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 24px;">Side-by-Side: Sidebar + Header</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+      <!-- A -->
+      <div style="background: white; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden;">
+        <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); color: white; font-size: 12px; font-weight: 600; padding: 6px 16px; text-align: center;">A — Plus Jakarta Sans</div>
+        <div style="display: flex; min-height: 200px;">
+          <div style="width: 160px; background: #fcfcfc; border-right: 1px solid #eee; padding: 12px; font-family: 'Plus Jakarta Sans'; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 8px;">
+              <div class="logo-icon" style="width: 24px; height: 24px; border-radius: 6px;">
+                <svg width="14" height="14" viewBox="0 0 34 34" fill="none"><path d="M13 10 L27 10" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M7 17 L27 17" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M5 24 L19 24" stroke="white" stroke-width="4" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-weight: 700; font-size: 13px;">RunCoach</span>
+            </div>
+            <div class="nav-item active" style="font-family: 'Plus Jakarta Sans'; font-size: 12px; padding: 6px 8px;">Dashboard</div>
+            <div class="nav-item" style="font-family: 'Plus Jakarta Sans'; font-size: 12px; padding: 6px 8px;">Training Plan</div>
+            <div class="nav-item" style="font-family: 'Plus Jakarta Sans'; font-size: 12px; padding: 6px 8px;">Activities</div>
+          </div>
+          <div style="flex: 1; padding: 16px; font-family: 'Plus Jakarta Sans';">
+            <span style="font-size: 10px; font-weight: 500; color: oklch(0.5 0.22 310); text-transform: uppercase; letter-spacing: 0.08em;">Overview</span>
+            <h3 style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-top: 2px;">Dashboard</h3>
+            <div style="width: 32px; height: 2.5px; border-radius: 2px; background: linear-gradient(90deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); margin-top: 6px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div style="background: white; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden;">
+        <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); color: white; font-size: 12px; font-weight: 600; padding: 6px 16px; text-align: center;">B — DM Sans</div>
+        <div style="display: flex; min-height: 200px;">
+          <div style="width: 160px; background: #fcfcfc; border-right: 1px solid #eee; padding: 12px; font-family: 'DM Sans'; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 8px;">
+              <div class="logo-icon" style="width: 24px; height: 24px; border-radius: 6px;">
+                <svg width="14" height="14" viewBox="0 0 34 34" fill="none"><path d="M13 10 L27 10" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M7 17 L27 17" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M5 24 L19 24" stroke="white" stroke-width="4" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-weight: 700; font-size: 13px;">RunCoach</span>
+            </div>
+            <div class="nav-item active" style="font-family: 'DM Sans'; font-size: 12px; padding: 6px 8px;">Dashboard</div>
+            <div class="nav-item" style="font-family: 'DM Sans'; font-size: 12px; padding: 6px 8px;">Training Plan</div>
+            <div class="nav-item" style="font-family: 'DM Sans'; font-size: 12px; padding: 6px 8px;">Activities</div>
+          </div>
+          <div style="flex: 1; padding: 16px; font-family: 'DM Sans';">
+            <div style="border-left: 3px solid; border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1; padding-left: 12px;">
+              <h3 style="font-size: 22px; font-weight: 700; letter-spacing: -0.01em;">Dashboard</h3>
+              <p style="font-size: 12px; color: #888; margin-top: 2px;">Your training at a glance</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div style="background: white; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden;">
+        <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); color: white; font-size: 12px; font-weight: 600; padding: 6px 16px; text-align: center;">C — Outfit</div>
+        <div style="display: flex; min-height: 200px;">
+          <div style="width: 160px; background: #fcfcfc; border-right: 1px solid #eee; padding: 12px; font-family: 'Outfit'; font-size: 12px;">
+            <div style="display: flex; align-items: center; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid #eee; margin-bottom: 8px;">
+              <div class="logo-icon" style="width: 24px; height: 24px; border-radius: 6px;">
+                <svg width="14" height="14" viewBox="0 0 34 34" fill="none"><path d="M13 10 L27 10" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M7 17 L27 17" stroke="white" stroke-width="4" stroke-linecap="round"/><path d="M5 24 L19 24" stroke="white" stroke-width="4" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-weight: 700; font-size: 13px;">RunCoach</span>
+            </div>
+            <div class="nav-item active" style="font-family: 'Outfit'; font-size: 12px; padding: 6px 8px;">Dashboard</div>
+            <div class="nav-item" style="font-family: 'Outfit'; font-size: 12px; padding: 6px 8px;">Training Plan</div>
+            <div class="nav-item" style="font-family: 'Outfit'; font-size: 12px; padding: 6px 8px;">Activities</div>
+          </div>
+          <div style="flex: 1; font-family: 'Outfit';">
+            <div style="background: linear-gradient(135deg, oklch(0.45 0.22 295 / 8%), oklch(0.65 0.2 350 / 6%)); padding: 16px; border-bottom: 1px solid oklch(0.65 0.2 350 / 15%);">
+              <h3 style="font-size: 22px; font-weight: 700; letter-spacing: -0.01em;">Dashboard</h3>
+              <p style="font-size: 12px; color: #888; margin-top: 2px;">Your training overview</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary table -->
+  <div style="margin-top: 48px; background: white; border-radius: 16px; border: 1px solid #e5e5e5; padding: 32px;">
+    <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">Summary</h2>
+    <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+      <thead>
+        <tr style="border-bottom: 1px solid #eee; text-align: left;">
+          <th style="padding: 10px 0; color: #888; font-weight: 500;">Option</th>
+          <th style="padding: 10px 0; color: #888; font-weight: 500;">Font</th>
+          <th style="padding: 10px 0; color: #888; font-weight: 500;">Header Style</th>
+          <th style="padding: 10px 0; color: #888; font-weight: 500;">Vibe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #f5f5f5;">
+          <td style="padding: 12px 0;"><span class="tag" style="background: oklch(0.95 0.04 340); color: oklch(0.4 0.15 310);">A</span></td>
+          <td style="padding: 12px 0; font-family: 'Plus Jakarta Sans'; font-weight: 600;">Plus Jakarta Sans</td>
+          <td style="padding: 12px 0;">Category label + bold title + gradient underline</td>
+          <td style="padding: 12px 0;">Athletic, modern, high-energy</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #f5f5f5;">
+          <td style="padding: 12px 0;"><span class="tag" style="background: oklch(0.95 0.04 340); color: oklch(0.4 0.15 310);">B</span></td>
+          <td style="padding: 12px 0; font-family: 'DM Sans'; font-weight: 600;">DM Sans</td>
+          <td style="padding: 12px 0;">Left gradient border + title/subtitle block</td>
+          <td style="padding: 12px 0;">Clean, professional, calm</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px 0;"><span class="tag" style="background: oklch(0.95 0.04 340); color: oklch(0.4 0.15 310);">C</span></td>
+          <td style="padding: 12px 0; font-family: 'Outfit'; font-weight: 600;">Outfit</td>
+          <td style="padding: 12px 0;">Subtle gradient banner background</td>
+          <td style="padding: 12px 0;">Sporty, warm, inviting</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

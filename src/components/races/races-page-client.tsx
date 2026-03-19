@@ -300,9 +300,9 @@ export function RacesPageClient({ races, userRaces }: RacesPageClientProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Discover Races</h1>
-        <p className="text-muted-foreground">
+      <div className="page-header">
+        <h1 className="text-2xl font-bold tracking-tight">Discover Races</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
           Find your next race from {races.length}+ events worldwide.
         </p>
       </div>

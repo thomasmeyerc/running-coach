@@ -96,9 +96,9 @@ export function GoalsPageClient({ goals }: GoalsPageClientProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Goals</h1>
-          <p className="text-muted-foreground">
+        <div className="page-header">
+          <h1 className="text-2xl font-bold tracking-tight">Goals</h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
             Set and manage your training goals.
           </p>
         </div>

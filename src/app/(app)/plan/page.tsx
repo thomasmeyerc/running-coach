@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { PlanCalendar } from "@/components/plan/plan-calendar";
 import type { TrainingPlan, PlannedSession, Goal } from "@/types/database";
-import { GeneratePlanButton } from "@/components/plan/generate-plan-button";
 import { PlanCoach, RegeneratePlanButton } from "@/components/plan/plan-coach";
 import { Calendar, Target, Sparkles } from "lucide-react";
 
@@ -48,13 +47,11 @@ export default async function PlanPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Training Plan</h1>
-          <p className="text-muted-foreground">
-            Your personalized training schedule.
-          </p>
-        </div>
+      <div className="page-header">
+        <h1 className="text-2xl font-bold tracking-tight">Training Plan</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
+          Your personalized training schedule.
+        </p>
       </div>
 
       {!typedPlan ? (
@@ -87,7 +84,12 @@ function GeneratePlanState({ goals }: { goals: Goal[] }) {
           Generate a personalized training plan powered by AI.
         </p>
         <div className="mt-6">
-          <GeneratePlanButton goalId={primaryGoal.id} />
+          <Link href="/plan/generate">
+            <Button size="lg">
+              <Sparkles className="mr-2 h-4 w-4" />
+              Create Training Plan
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
@@ -150,7 +152,12 @@ function PlanView({ plan, goalId }: { plan: PlanWithSessions; goalId: string }) 
             </div>
           </div>
           <div className="flex items-center gap-2 pt-2">
-            <RegeneratePlanButton goalId={goalId} />
+            <Link href="/plan/generate">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Sparkles className="h-3.5 w-3.5" />
+                Regenerate Plan
+              </Button>
+            </Link>
           </div>
         </CardHeader>
       </Card>

@@ -141,3 +141,13 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Page header with gradient left border */
+.page-header {
+  border-left: 3px solid;
+  border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1;
+  padding-left: 16px;
+}
+.dark .page-header {
+  border-image: linear-gradient(to bottom, oklch(0.5 0.2 295), oklch(0.7 0.18 350)) 1;
+}

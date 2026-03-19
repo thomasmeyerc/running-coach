@@ -202,15 +202,15 @@ export function PlanGenerator({
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
+      <div className="page-header">
+        <h1 className="text-2xl font-bold tracking-tight">
           {step === 3 && isGenerating
             ? "Building Your Plan"
             : step === 3 && generationComplete
               ? "Plan Ready!"
               : "Create Training Plan"}
         </h1>
-        <p className="text-muted-foreground">
+        <p className="mt-0.5 text-sm text-muted-foreground">
           {step === 3
             ? isGenerating
               ? "Your AI coach is designing a personalized plan..."

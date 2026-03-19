@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RunCoach — Design Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; color: #1a1a1a; }
+  body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; color: #1a1a1a; }
   .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
   h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
   h1 span { background: linear-gradient(135deg, oklch(0.45 0.22 295), oklch(0.65 0.2 350)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -145,8 +148,26 @@
     </div>
   </div>
 
+  <!-- Typography -->
+  <h2>Typography — DM Sans</h2>
+  <p style="font-size:13px; color:#888; margin-bottom:20px;">Clean geometric sans-serif. 700 weight for headings, 400/500 for body. Slightly tighter letter-spacing on headings (−0.01em).</p>
+
+  <h3>Page Header Style</h3>
+  <div style="margin: 16px 0;">
+    <div style="border-left: 3px solid; border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1; padding-left: 16px;">
+      <h3 style="font-size: 24px; font-weight: 700; letter-spacing: -0.01em;">Dashboard</h3>
+      <p style="font-size: 14px; color: #888; margin-top: 2px;">Your training overview at a glance.</p>
+    </div>
+  </div>
+  <div style="margin: 16px 0;">
+    <div style="border-left: 3px solid; border-image: linear-gradient(to bottom, oklch(0.45 0.22 295), oklch(0.65 0.2 350)) 1; padding-left: 16px;">
+      <h3 style="font-size: 24px; font-weight: 700; letter-spacing: -0.01em;">Training Plan</h3>
+      <p style="font-size: 14px; color: #888; margin-top: 2px;">Your personalized training schedule.</p>
+    </div>
+  </div>
+
   <!-- Hero Text -->
-  <h2>Hero Text</h2>
+  <h3>Hero / Landing</h3>
   <div class="hero-preview">
     Your AI-powered<br>
     <span>running coach</span>
